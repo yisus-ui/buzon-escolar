@@ -1,0 +1,128 @@
+ html>
+<html lang=DOCTYPE"es">
+<head><!
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buzón Seguro Escolar</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f0f4f8; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { background: #ffffff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 500px; width: 100%; padding: 30px; position: relative; }
+        .header { text-align: center; margin-bottom: 24px; }
+        .header h1 { color: #2c3e50; font-size: 24px; margin-bottom: 6px; }
+        .header p { color: #7f8c8d; font-size: 14px; }
+        .badge { display: inline-block; background-color: #e8f8f5; color: #1abc9c; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-top: 10px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #34495e; font-size: 14px; }
+        select, textarea { width: 100%; padding: 12px; border: 1px solid #dcdde1; border-radius: 8px; font-size: 14px; }
+        select:focus, textarea:focus { outline: none; border-color: #3498db; }
+        textarea { resize: vertical; min-height: 110px; }
+        button { width: 100%; padding: 14px; background-color: #3498db; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        button:hover { background-color: #2980b9; }
+        
+        /* Estilo de la tarjeta de éxito */
+        .result-card { display: none; background-color: #eaf2f8; border: 2px dashed #3498db; border-radius: 8px; padding: 20px; text-align: center; margin-top: 20px; }
+        .code-box { font-size: 24px; font-weight: bold; color: #e74c3c; background: #fff; padding: 10px; border-radius: 6px; display: inline-block; margin: 10px 0; letter-spacing: 2px; }
+
+        /* Estilo del Gatito Misi */
+        .misi-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; }
+        .misi-bubble { background: white; padding: 10px 14px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 8px; font-size: 13px; color: #2c3e50; max-width: 200px; border: 1px solid #dfe6e9; animation: float 3s ease-in-out infinite; }
+        .misi-avatar { width: 60px; height: 60px; background: #ffeaa7; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 3px solid white; transition: transform 0.2s; }
+        .misi-avatar:hover { transform: scale(1.1); }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Buzón Seguro Escolar</h1>
+            <p>Tu voz importa. Envía tu reporte con total confianza.</p>
+            <span class="badge">🔒 100% Anónimo y Confidencial</span>
+        </div>
+
+        <form id="reportForm">
+            <div class="form-group">
+                <label for="categoria">Categoría del Reporte:</label>
+                <select id="categoria" required>
+                    <option value="" disabled selected>Selecciona una opción...</option>
+                    <option value="Bullying">Acoso Escolar / Bullying</option>
+                    <option value="Ciberbullying">Ciberbullying</option>
+                    <option value="Infraestructura">Infraestructura / Limpieza</option>
+                    <option value="Apoyo Psicológico">Solicitud de Apoyo Psicológico</option>
+                    <option value="Otro">Otro / Sugerencia</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="detalles">Descripción de la situación:</label>
+                <textarea id="detalles" placeholder="Describe lo sucedido (sin incluir tus datos personales)..." required></textarea>
+            </div>
+
+            <button type="submit" id="submitBtn">Enviar Reporte Anónimo</button>
+        </form>
+
+        <div class="result-card" id="resultCard">
+            <h3>¡Reporte Enviado con Éxito! 🎉</h3>
+            <p>Guarda este código para consultar el estado de tu caso:</p>
+            <div class="code-box" id="codigoGenerado">BSK-0000</div>
+            <p>El comité escolar revisará la información de forma segura.</p>
+        </div>
+    </div>
+
+    <!-- Gatito Misi Interactivo -->
+    <div class="misi-container">
+        <div class="misi-bubble" id="misiText">¡Hola! 🐾 Estoy aquí para cuidarte. ¿Todo bien por aquí?</div>
+        <div class="misi-avatar" onclick="hablarMisi()">🐱</div>
+    </div>
+
+    <script>
+        const mensajesMisi = [
+            "¡Hola! 🐾 Recuerda que nadie sabrá quién eres.",
+            "Si necesitas hablar con alguien, puedes pedir apoyo psicológico aquí.",
+            "¡Tu seguridad es lo más importante! 💙",
+            "Haz clic en mí si tienes dudas sobre cómo reportar."
+        ];
+const script_URL = "https://script.google.com/macros/s/AKfycbx8EeT_-vurtIicZTUFqj61etjaXwgU3OhiPjwEyI4efEdlIKNLQGB6-yp6gq7M4b8x/exec"
+        function hablarMisi() {
+            const randomMsg = mensajesMisi[Math.floor(Math.random() * mensajesMisi.length)];
+            document.getElementById('misiText').textContent = randomMsg;
+        }
+ 
+        const form = document.getElementById('reportForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultCard = document.getElementById('resultCard');
+        const codigoGenerado = document.getElementById('codigoGenerado');
+
+       form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando de forma segura...';
+
+            const payload = {
+                categoria: document.getElementById('categoria').value,
+                detalles: document.getElementById('detalles').value
+            };
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                const codigoLocal = 'BSK-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+                codigoGenerado.textContent = codigoLocal;
+                form.style.display = 'none';
+                resultCard.style.display = 'block';
+                document.getElementById('misiText').textContent = "¡Listo! Tu reporte fue enviado de forma segura a la base de datos. 🌟";
+            })
+            .catch(error => {
+                alert('Hubo un error al enviar el reporte. Inténtalo de nuevo.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar Reporte Anónimo';
+            });
+        });
+    </script>
+</body>
+</html>
